@@ -12,6 +12,7 @@ const CLIENT_SECRET = "95bb7060f2254649852bfc6fe195b383";
 
 // https://developer.spotify.com/documentation/web-api/reference/#/
 function App() {
+  const [artist, setArtist] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [topTracks, setTopTracks] = useState([]);
 
@@ -35,11 +36,9 @@ function App() {
         // TODO: render error html
       })
 
-    findTopTracks();
-
   }, [])
 
-  async function findTopTracks() {
+  async function findTopTracks() { 
     var authParameters = {
       method: 'GET',
       headers: {
@@ -48,19 +47,22 @@ function App() {
       }
     }
 
-    // hard-coded id
-    var artistID = '1dfeR4HaWDbWqFHLkxsg1d';
+    // Find artist's ID (top searched result)
+    var artistID = await fetch('https://api.spotify.com/v1/search?q=' + artist + '&type=artist', authParameters)
+      .then(response => response.json())
+      .then(data => {
+        return (data.artists.items[0].id)
+      })
 
+    // Find artist's top tracks
     var returnedTopTracks = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/top-tracks' + '?market=CZ', authParameters)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         setTopTracks(data.tracks)
       })
   }
 
   console.log(topTracks);
-
 
   return (
     <div className="App">
@@ -72,11 +74,12 @@ function App() {
               type="input"
               onKeyPress={event => {
                 if (event.key == "Enter") {
-                  // TODO search artist by name
+                  findTopTracks();
                 } 
               }}
+              onChange={event => setArtist(event.target.value)}
             />
-            <Button>
+            <Button onClick={findTopTracks}>
               Search
             </Button>
         </InputGroup>

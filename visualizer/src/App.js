@@ -1,16 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
-import {useEffect, useState} from 'react';
-
-// Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useEffect, useState} from 'react';
 import { Container, InputGroup, FormControl, Button, Table } from 'react-bootstrap'; 
 
 const CLIENT_ID = "387279f221ed48f68d07577ef0d86ab4";
 const CLIENT_SECRET = "95bb7060f2254649852bfc6fe195b383";
+const SPOTIFY_API = "https://api.spotify.com/v1";
 
-
-// https://developer.spotify.com/documentation/web-api/reference/#/
 function App() {
   const [artist, setArtist] = useState("");
   const [artistname, setArtistName] = useState("");
@@ -18,7 +15,6 @@ function App() {
   const [topTracks, setTopTracks] = useState([]);
   const [artistGenres, setArtistgenres] = useState([]);
   
-  // Run after render
   useEffect(() => {
     // Spotify API - get access token
     var authParameters = {
@@ -32,14 +28,10 @@ function App() {
     fetch('https://accounts.spotify.com/api/token', authParameters)
       .then(result => result.json())
       .then(data => setAccessToken(data.access_token))
-      .catch(err => {
-        console.log(err)
-        // TODO: render error html
-      })
-
+      .catch(err => {console.log(err)})
   }, [])
 
-  async function findTopTracks() { 
+  async function findTopTracks() {
     var authParameters = {
       method: 'GET',
       headers: {
@@ -49,7 +41,7 @@ function App() {
     }
 
     // Find artist's ID and genres (top searched result)
-    var artistID = await fetch('https://api.spotify.com/v1/search?q=' + artist + '&type=artist', authParameters)
+    var artistID = await fetch(SPOTIFY_API + '/search?q=' + artist + '&type=artist', authParameters)
       .then(response => response.json())
       .then(data => {
         setArtistgenres(data.artists.items[0].genres);
@@ -57,15 +49,13 @@ function App() {
         return (data.artists.items[0].id);
       })
 
-
     // Find artist's top tracks
-    var returnedTopTracks = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/top-tracks' + '?market=CZ', authParameters)
+    var returnedTopTracks = await fetch(SPOTIFY_API + '/artists/' + artistID + '/top-tracks' + '?market=CZ', authParameters)
       .then(response => response.json())
       .then(data => {
         setTopTracks(data.tracks)
       })
   }
-
 
   return (
     <div className="App">

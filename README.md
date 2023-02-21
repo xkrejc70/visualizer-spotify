@@ -4,6 +4,13 @@ Very simple React App using react-bootstrap for basic frontend and Spotify API (
 
 The app allows you to search for an artist and view their top tracks.
 
+In the project directory `/visualizer`, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
 # Task
 
 ## Visualizer of CI Jobs - 2023 Home Assignment

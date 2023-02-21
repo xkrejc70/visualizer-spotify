@@ -1,6 +1,8 @@
 # Visualizer of Spotify artist's top tracks
 
-Very simple React App using react-bootstrap for basic frontend and Spotify API (JS Fetch)
+Very simple React App using react-bootstrap for basic frontend and Spotify API (JS Fetch).
+
+The app allows you to search for an artist and view their top tracks.
 
 # Task
 
